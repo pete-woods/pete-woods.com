@@ -1,50 +1,43 @@
-defaults: &defaults
-  working_directory: ~
+version: 2.1
 
-version: 2
+executors:
+  go:
+    resource_class: medium
+    docker:
+      - image: cimg/go:1.25
+
+  node:
+    resource_class: medium
+    docker:
+      - image: cimg/node:current
+
 jobs:
   build:
-    <<: *defaults
-    docker:
-      - image: 'cibuilds/hugo:0.65.2'
+    executor: go
     steps:
       - checkout
-      - run: git submodule sync
-      - run: git submodule update --init
-      - run:
-          name: Build
-          command: HUGO_ENV=production hugo -v
-      - run:
-         name: Test
-         command: htmlproofer ~/project/public --allow-hash-href --check-html --empty-alt-ignore --url-ignore='#btn-open-shareoptions,https://www.linkedin.com/in/pete-woods' --internal-domains='pete-woods.com'
+      - run: task install
+      - run: task build
+      - run: task test
       - persist_to_workspace:
           root: .
           paths:
-            - .firebaserc
-            - firebase.json
-            - package.json
-            - package-lock.json
             - public
 
   deployment:
-    <<: *defaults
-    docker:
-      - image: circleci/node:latest
+    executor: node
     steps:
+      - checkout
       - attach_workspace:
           at: .
-      - restore_cache: # special step to restore the dependency cache 
-          key: dependency-cache-{{ checksum "package.json" }}
-      - run:
-          name: Install dependencies
-          command: npm i
-      - save_cache: # special step to save the dependency cache
-          key: dependency-cache-{{ checksum "package.json" }}
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.lock" }}
+      - run: npm install
+      - save_cache:
+          key: dependency-cache-{{ checksum "package.lock" }}
           paths:
             - ./node_modules
-      - run:
-          name: Deploy
-          command: npm run deploy
+      - run: npm run deploy
 
 workflows:
   version: 2

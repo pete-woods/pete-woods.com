@@ -1,0 +1,43 @@
+version: '3'
+
+vars:
+  HUGO: './bin/tools/hugo'
+  HTMLTEST: './bin/tools/htmltest'
+
+tasks:
+  clean:
+    cmds:
+      - 'rm -rf ./public'
+
+  build:
+    cmds:
+      - task: clean
+      - '{{.HUGO}} --minify --gc'
+
+  server:
+    cmds:
+      - '{{.HUGO}} server'
+
+  test:
+    cmds:
+      - '{{.HTMLTEST}} {{.CLI_ARGS}}'
+
+  hugo:
+    cmds:
+      - '{{.HUGO}} {{.CLI_ARGS}}'
+
+  install:
+    vars:
+      HUGO_VERSION: 0.150.0
+      HTMLTEST_VERSION: 0.17.0
+    cmds:
+      - mkdir -p bin/tools
+      - curl -fsSL 'https://github.com/gohugoio/hugo/releases/download/v{{.HUGO_VERSION}}/hugo_extended_{{.HUGO_VERSION}}_{{OS}}-{{if eq OS "darwin"}}universal{{else}}{{ARCH}}{{end}}.tar.gz' | tar -C ./bin/tools -xz
+      - curl -fsSL 'https://github.com/wjdp/htmltest/releases/download/v{{.HTMLTEST_VERSION}}/htmltest_{{.HTMLTEST_VERSION}}_{{if eq OS "darwin"}}macos{{else}}{{OS}}{{end}}_{{ARCH}}.tar.gz' | tar -C ./bin/tools -xz
+
+  mod-tidy:
+    cmds:
+      - '{{.HUGO}} mod tidy'
+
+#https://github.com/wjdp/htmltest/releases/download/v0.17.0/htmltest_0.17.0_macos_arm64.tar.gz
+#https://github.com/wjdp/htmltest/releases/download/v0.17.0/htmltest_0.17.0_darwin_arm64.tar.gz

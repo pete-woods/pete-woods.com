@@ -1,0 +1,4 @@
+DirectoryPath: "public"
+IgnoreURLs:
+  - https://pete-woods.com
+  - https://jimmycai.com
