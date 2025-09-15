@@ -6,13 +6,13 @@ url = "https://github.com/pete-woods"
 [social.params]
 icon = "brand-github"
 
-[[social]]
-identifier = "twitter"
-name = "Twitter"
-url = "https://twitter.com/pete_woods"
-
-[social.params]
-icon = "brand-twitter"
+#[[social]]
+#identifier = "twitter"
+#name = "Twitter"
+#url = "https://twitter.com/pete_woods"
+#
+#[social.params]
+#icon = "brand-twitter"
 
 [[social]]
 identifier = "linkedin"
