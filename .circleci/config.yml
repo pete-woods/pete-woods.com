@@ -31,10 +31,10 @@ jobs:
       - attach_workspace:
           at: .
       - restore_cache:
-          key: dependency-cache-{{ checksum "package.lock" }}
+          key: dependency-cache-{{ checksum "package-lock.json" }}
       - run: npm install
       - save_cache:
-          key: dependency-cache-{{ checksum "package.lock" }}
+          key: dependency-cache-{{ checksum "package-lock.json" }}
           paths:
             - ./node_modules
       - run: npm run deploy
