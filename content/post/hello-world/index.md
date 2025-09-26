@@ -10,4 +10,6 @@ tags:
 #weight: 1
 ---
 
-I'm restarting my blog!
+I'm restarting my blog, with an intention to talk about all the great
+things I've learned over the last 20 years about creating and leading
+highly effective software development teams.
